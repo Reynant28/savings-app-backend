@@ -19,7 +19,7 @@ class UsersModel extends Authenticatable
         'password'
     ];
 
-    // public function tabungan(){
-    //     return $this->hasMany(TabunganModel::class, 'id_user');
-    // }
+    public function tabungan(){
+        return $this->hasMany(TabunganModel::class, 'id_user');
+    }
 }
