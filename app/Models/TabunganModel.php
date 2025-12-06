@@ -21,4 +21,8 @@ class TabunganModel extends Model
     public function user(){
         return $this->belongsTo(UsersModel::class, 'id_user');
     }
+
+    public function riwayatTabungan(){
+        return $this->hasMany(TransaksiTabunganModel::class, 'id_tabungan');
+    }
 }

@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RiwayatTabunganController;
 use App\Http\Controllers\TabunganController;
+use App\Http\Controllers\TransaksiTabunganController;
 use Illuminate\Support\Facades\Route;
 
 // Route Publik
@@ -14,4 +16,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/tabungan', [TabunganController::class, 'store']);
     Route::put('/tabungan/{id_tabungan}', [TabunganController::class, 'update']);
     Route::delete('/tabungan/{id_tabungan}', [TabunganController::class, 'destroy']);
+
+    // Route Riwayat Tabungan
+    Route::get('/riwayat-tabungan', [TransaksiTabunganController::class, 'index']);
+    Route::post('/riwayat-tabungan', [TransaksiTabunganController::class, 'store']);
+    Route::put('/riwayat-tabungan/{id_riwayat}', [TransaksiTabunganController::class, 'update']);
+    Route::delete('/riwayat-tabungan/{id_riwayat}', [TransaksiTabunganController::class, 'destroy']);
 });
