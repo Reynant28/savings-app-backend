@@ -12,7 +12,7 @@ class TabunganModel extends Model
     protected $fillable = [
         'id_user',
         'nama_tabungan',
-        'photo_url',
+        'photo_file',
         'target_nominal',
         'status',
         'target_tanggal',
@@ -24,5 +24,10 @@ class TabunganModel extends Model
 
     public function riwayatTabungan(){
         return $this->hasMany(TransaksiTabunganModel::class, 'id_tabungan');
+    }
+
+    public function getGambarProdukUrlAttribute()
+    {
+        return $this->photo_file ? asset('storage/' . $this->photo_file) : null;
     }
 }

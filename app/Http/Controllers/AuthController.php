@@ -20,10 +20,12 @@ class AuthController extends Controller
         $user = UsersModel::where('email', $request->email)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['email atau password salah.'],
-            ]);
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Email atau password salah',
+            ], 401);
         }
+
 
         $token = $user->createToken('auth-token')->plainTextToken;
 

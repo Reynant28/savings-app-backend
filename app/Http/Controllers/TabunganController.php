@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\TabunganModel;
 use Illuminate\Http\Request;
+use App\Models\TabunganModel;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class TabunganController extends Controller
@@ -20,9 +22,8 @@ class TabunganController extends Controller
 
     public function store(Request $request){
         $validator = Validator::make($request->all(), [
-            'id_user' => 'required',
             'nama_tabungan' => 'required',
-            'photo_url' => 'nullable',
+            'photo_file' => 'nullable',
             'target_nominal' => 'required',
             'status' => 'required',
             'target_tanggal' => 'required',
@@ -35,14 +36,18 @@ class TabunganController extends Controller
             ]);
         }
 
-        $tabungan = TabunganModel::create(request()->only([
-            'id_user',
-            'nama_tabungan',
-            'photo_url',
-            'target_nominal',
-            'status',
-            'target_tanggal',
-        ]));
+        $photo_file = null;
+        if ($request->hasFile('photo_file')) {
+            $photo_file = $request->file('photo_file')->store('tabungan_images', 'public');
+        }
+
+        $tabungan_data = $request->only(['nama_tabungan', 'target_nominal', 'status', 'target_tanggal']);
+
+        $tabungan_data['id_user'] = Auth::id();
+
+        $tabungan_data['photo_file'] = $photo_file;
+
+        $tabungan = TabunganModel::create($tabungan_data);
 
         return response()->json([
             'status' => 'success',
@@ -52,9 +57,10 @@ class TabunganController extends Controller
     }
 
     public function update(Request $request, $id_tabungan){
+
         $tabungan = TabunganModel::find($id_tabungan);
 
-        if (!$id_tabungan) {
+        if (!$tabungan) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Data riwayat tabungan tidak ditemukan.',
@@ -64,7 +70,7 @@ class TabunganController extends Controller
         $validator = Validator::make($request->all(), [
             'id_user' => 'required',
             'nama_tabungan' => 'required',
-            'photo_url' => 'nullable',
+            'photo_file' => 'nullable',
             'target_nominal' => 'required',
             'status' => 'required',
             'target_tanggal' => 'required',
@@ -78,14 +84,20 @@ class TabunganController extends Controller
             ], 422);
         }
 
-        $tabungan->update(request()->only([
-            'id_user',
-            'nama_tabungan',
-            'photo_url',
-            'target_nominal',
-            'status',
-            'target_tanggal',
-        ]));
+        $tabungan->nama_tabungan = $request->nama_tabungan;
+        $tabungan->target_nominal = $request->target_nominal;
+        $tabungan->status = $request->status;
+        $tabungan->target_tanggal = $request->target_tanggal;
+
+        if ($request->hasFile('photo_file')) {
+            // Hapus gambar lama jika ada
+            if ($tabungan->photo_file && Storage::disk('public')->exists($tabungan->photo_file)) {
+                Storage::disk('public')->delete($tabungan->photo_file);
+            }
+            $tabungan->photo_file = $request->file('photo_file')->store('tabungan_images', 'public');
+        }
+
+        $tabungan->save();
 
         return response()->json([
             'status' => 'success',
@@ -97,11 +109,15 @@ class TabunganController extends Controller
     public function destroy($id_tabungan){
         $tabungan = TabunganModel::find($id_tabungan);
 
-        if (!$id_tabungan) {
+        if (!$tabungan) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Data riwayat tabungan tidak ditemukan.',
             ], 404);
+        }
+
+        if ($tabungan->photo_file && Storage::disk('public')->exists($tabungan->photo_file)) {
+            Storage::disk('public')->delete($tabungan->photo_file);
         }
 
         $tabungan->delete();

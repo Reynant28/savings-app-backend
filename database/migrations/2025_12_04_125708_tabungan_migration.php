@@ -15,7 +15,7 @@ return new class extends Migration
             $table->increments('id_tabungan');
             $table->unsignedInteger('id_user');
             $table->string('nama_tabungan');
-            $table->string('photo_url')->nullable();
+            $table->string('photo_file')->nullable();
             $table->decimal('target_nominal', 15, 2);
             $table->enum('status', ['aktif', 'selesai'])->default('aktif');
             $table->date('target_tanggal');

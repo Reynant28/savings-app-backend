@@ -47,6 +47,7 @@ class TransaksiTabunganController extends Controller
     }
 
     public function update(Request $request, $id_riwayat){
+
         $riwayat_tabungan = TransaksiTabunganModel::find($id_riwayat);
 
         if (!$riwayat_tabungan) {
@@ -70,11 +71,10 @@ class TransaksiTabunganController extends Controller
             ], 422);
         }
 
-        $riwayat_tabungan->update(request()->only([
-            'id_tabungan',
-            'nominal',
-            'tanggal',
-        ]));
+        $riwayat_tabungan->id_tabungan = $request->id_tabungan;
+        $riwayat_tabungan->nominal = $request->nominal;
+        $riwayat_tabungan->tanggal = $request->tanggal;
+        $riwayat_tabungan->save();
 
         return response()->json([
             'status' => 'success',

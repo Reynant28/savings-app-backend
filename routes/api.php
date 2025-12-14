@@ -11,6 +11,8 @@ Route::post('/login', [AuthController::class, 'LoginUser']);
 Route::post('/register', [AuthController::class, 'RegisterUser']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
+    Route::post('/logout', [AuthController::class, 'LogoutUser']);
+    
     // Route Tabungan
     Route::get('/tabungan', [TabunganController::class, 'index']);
     Route::post('/tabungan', [TabunganController::class, 'store']);
