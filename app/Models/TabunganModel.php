@@ -18,6 +18,8 @@ class TabunganModel extends Model
         'target_tanggal',
     ];
 
+    protected $appends = ['photo_url'];
+
     public function user(){
         return $this->belongsTo(UsersModel::class, 'id_user');
     }
@@ -26,8 +28,10 @@ class TabunganModel extends Model
         return $this->hasMany(TransaksiTabunganModel::class, 'id_tabungan');
     }
 
-    public function getGambarProdukUrlAttribute()
+    public function getPhotoUrlAttribute()
     {
-        return $this->photo_file ? asset('storage/' . $this->photo_file) : null;
+        return isset($this->attributes['photo_file'])
+            ? asset('storage/' . $this->attributes['photo_file'])
+            : null;
     }
 }

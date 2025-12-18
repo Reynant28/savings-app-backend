@@ -56,55 +56,62 @@ class TabunganController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id_tabungan){
-
+    public function update(Request $request, $id_tabungan)
+    {
         $tabungan = TabunganModel::find($id_tabungan);
 
         if (!$tabungan) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Data riwayat tabungan tidak ditemukan.',
+                'message' => 'Data tabungan tidak ditemukan.',
             ], 404);
         }
 
+        if ($tabungan->id_user !== Auth::id()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unauthorized.',
+            ], 403);
+        }
+
         $validator = Validator::make($request->all(), [
-            'id_user' => 'required',
-            'nama_tabungan' => 'required',
-            'photo_file' => 'nullable',
-            'target_nominal' => 'required',
-            'status' => 'required',
-            'target_tanggal' => 'required',
+            'nama_tabungan'   => 'required',
+            'photo_file'      => 'nullable',
+            'target_nominal'  => 'required',
+            'status'          => 'required',
+            'target_tanggal'  => 'required',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Validasi gagal.',
                 'errors' => $validator->errors(),
             ], 422);
         }
 
-        $tabungan->nama_tabungan = $request->nama_tabungan;
-        $tabungan->target_nominal = $request->target_nominal;
-        $tabungan->status = $request->status;
-        $tabungan->target_tanggal = $request->target_tanggal;
-
         if ($request->hasFile('photo_file')) {
-            // Hapus gambar lama jika ada
             if ($tabungan->photo_file && Storage::disk('public')->exists($tabungan->photo_file)) {
                 Storage::disk('public')->delete($tabungan->photo_file);
             }
-            $tabungan->photo_file = $request->file('photo_file')->store('tabungan_images', 'public');
+
+            $tabungan->photo_file = $request->file('photo_file')
+                ->store('tabungan_images', 'public');
         }
+
+        $tabungan->nama_tabungan  = $request->nama_tabungan;
+        $tabungan->target_nominal = $request->target_nominal;
+        $tabungan->status         = $request->status;
+        $tabungan->target_tanggal = $request->target_tanggal;
 
         $tabungan->save();
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Data riwayat tabungan berhasil diupdate',
+            'message' => 'Tabungan berhasil diperbarui',
             'data' => $tabungan,
         ]);
     }
+
 
     public function destroy($id_tabungan){
         $tabungan = TabunganModel::find($id_tabungan);
