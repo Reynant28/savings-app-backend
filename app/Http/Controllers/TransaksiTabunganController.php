@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\TabunganModel;
 use App\Models\TransaksiTabunganModel;
 use Illuminate\Http\Request;
 
@@ -38,6 +39,15 @@ class TransaksiTabunganController extends Controller
             'nominal',
             'tanggal',
         ]));
+
+        $goal = TabunganModel::with('riwayatTabungan')->find($request->id_tabungan);
+
+        $totalDeposit = $goal->riwayatTabungan->sum('nominal');
+
+        if ($totalDeposit >= $goal->target_nominal) {
+            $goal->status = 'selesai';
+            $goal->save();
+        }
 
         return response()->json([
             'status' => 'success',
