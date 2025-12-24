@@ -1,59 +1,117 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Savings App Backend
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Repository ini berisi **Backend** untuk aplikasi **Savings App**, sebuah platform pencatat dan pengelola target tabungan pengguna.
 
-## About Laravel
+Backend dibangun menggunakan **Laravel 12** dan berfungsi sebagai penyedia layanan REST API untuk autentikasi, pengelolaan target tabungan, serta riwayat transaksi secara real-time.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+> **Frontend Repository (React):**  
+> https://github.com/Reynant28/savings-app-frontend
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Fitur Utama
 
-## Learning Laravel
+- **Secure Authentication**  
+  Sistem login dan register menggunakan **Laravel Sanctum (token-based authentication)**.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+- **Goal Management**  
+  CRUD target tabungan lengkap dengan **upload foto target**.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- **Transaction Tracking**  
+  Pencatatan riwayat setoran (deposit) yang terhubung ke setiap target tabungan.
 
-## Laravel Sponsors
+- **Progress Analytics**  
+  Perhitungan otomatis:
+  - total tabungan
+  - persentase progres
+  - sisa hari menuju target
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- **File Storage**  
+  Penyimpanan gambar menggunakan **Laravel Storage**.
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## Tech Stack
 
-## Contributing
+- **Framework**: Laravel 12  
+- **Database**: PostgreSQL  
+- **Authentication**: Laravel Sanctum  
+- **File Handling**: Laravel Storage
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+## Struktur Database
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Backend ini menggunakan struktur tabel relasional:
 
-## Security Vulnerabilities
+- `tb_users`  
+  Menyimpan data pengguna.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- `tb_tabungan`  
+  Menyimpan data target tabungan (relasi ke `id_user`).
 
-## License
+- `tb_transaksi_tabungan`  
+  Menyimpan riwayat setoran (deposit) tiap tabungan.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
+
+## Instalasi (Localhost)
+
+### 1️. Clone & Install Dependency
+```bash
+git clone https://github.com/Reynant28/savings-app-backend.git
+cd savings-app-backend
+composer install
+````
+
+### 2️. Konfigurasi Environment
+
+* Duplikat file `.env.example` menjadi `.env`
+* Generate application key:
+
+```bash
+php artisan key:generate
+```
+
+* Atur konfigurasi database di `.env`:
+
+```env
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=db_savings
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+```
+
+### 3. Migrasi Database & Storage
+
+```bash
+php artisan migrate
+php artisan storage:link
+```
+
+### 4️. Jalankan Server
+
+```bash
+php artisan serve
+```
+
+Server akan berjalan di:
+
+```
+http://127.0.0.1:8000
+```
+
+---
+
+## Video Demonstrasi
+
+Video berisi:
+
+* Penjelasan aplikasi
+* Struktur database
+* Demonstrasi
+
+Link:
+[https://drive.google.com/drive/folders/1wRhFe-tW-F0LWSCmZgILfMp3njed78pO](https://drive.google.com/drive/folders/1wRhFe-tW-F0LWSCmZgILfMp3njed78pO)
