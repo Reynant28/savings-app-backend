@@ -41,41 +41,32 @@ class AuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'username' => 'required',
-            'email' => 'required',
+            'email' => 'required|email|unique:tb_users,email',
             'password' => 'required',
+        ], [
+            'email.unique' => 'Email sudah terdaftar',
         ]);
 
         if ($validator->fails()) {
-
             return response()->json([
                 'status' => 'error',
                 'errors' => $validator->errors()
             ], 422);
-
         }
 
         $user = UsersModel::create([
-
             'username' => $request->username,
-
             'email' => $request->email,
-
             'password' => Hash::make($request->password),
-
         ]);
 
         $token = $user->createToken('auth-token')->plainTextToken;
 
         return response()->json([
-
             'status' => 'success',
-
             'message' => 'User berhasil didaftarkan',
-
             'user' => $user,
-
             'token' => $token,
-
         ], 201);
     }
 

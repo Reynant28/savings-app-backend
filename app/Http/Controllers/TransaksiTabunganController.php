@@ -10,13 +10,17 @@ use Illuminate\Support\Facades\Validator;
 
 class TransaksiTabunganController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $tabungan = TransaksiTabunganModel::all();
+        $userId = $request->user()->id_user;
+
+        $riwayat = TransaksiTabunganModel::whereHas('tabungan', function($query) use ($userId) {
+            $query->where('id_user', $userId);
+        })->get();
 
         return response()->json([
             'status' => 'success',
-            'data' => $tabungan,
+            'data' => $riwayat,
         ]);
     }
 
@@ -34,7 +38,7 @@ class TransaksiTabunganController extends Controller
             ]);
         }
 
-        $tabungan = TransaksiTabunganModel::create(request()->only([
+        $riwayat = TransaksiTabunganModel::create(request()->only([
             'id_tabungan',
             'nominal',
             'tanggal',
@@ -46,68 +50,14 @@ class TransaksiTabunganController extends Controller
 
         if ($totalDeposit >= $goal->target_nominal) {
             $goal->status = 'selesai';
+            $goal->tanggal_selesai = now();
             $goal->save();
         }
 
         return response()->json([
             'status' => 'success',
             'message' => 'Data riwayat tabungan berhasil disimpan',
-            'data' => $tabungan,
-        ]);
-    }
-
-    public function update(Request $request, $id_riwayat){
-
-        $riwayat_tabungan = TransaksiTabunganModel::find($id_riwayat);
-
-        if (!$riwayat_tabungan) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Data riwayat tabungan tidak ditemukan.',
-            ], 404);
-        }
-
-        $validator = Validator::make($request->all(), [
-            'id_tabungan' => 'required|exists:tb_tabungan,id_tabungan',
-            'nominal' => 'required',
-            'tanggal' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Validasi gagal.',
-                'errors' => $validator->errors(),
-            ], 422);
-        }
-
-        $riwayat_tabungan->id_tabungan = $request->id_tabungan;
-        $riwayat_tabungan->nominal = $request->nominal;
-        $riwayat_tabungan->tanggal = $request->tanggal;
-        $riwayat_tabungan->save();
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Data riwayat tabungan berhasil diupdate',
-            'data' => $riwayat_tabungan,
-        ]);
-    }
-
-    public function destroy($id_riwayat){
-        $riwayat_tabungan = TransaksiTabunganModel::find($id_riwayat);
-
-        if (!$riwayat_tabungan) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Data riwayat tabungan tidak ditemukan.',
-            ], 404);
-        }
-
-        $riwayat_tabungan->delete();
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Data riwayat tabungan berhasil dihapus',
+            'data' => $riwayat,
         ]);
     }
 }

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->decimal('target_nominal', 15, 2);
             $table->enum('status', ['aktif', 'selesai', 'cancel'])->default('aktif');
             $table->date('target_tanggal');
+            $table->date('tanggal_selesai')->nullable();
             $table->timestamps();
 
             $table->foreign('id_user')

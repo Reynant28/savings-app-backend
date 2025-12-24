@@ -10,9 +10,11 @@ use Illuminate\Support\Facades\Validator;
 
 class TabunganController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $tabungan = TabunganModel::all();
+        $userId = $request->user()->id_user;
+
+        $tabungan = TabunganModel::where('id_user', $userId)->get();
 
         return response()->json([
             'status' => 'success',

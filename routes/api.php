@@ -12,7 +12,7 @@ Route::post('/register', [AuthController::class, 'RegisterUser']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/logout', [AuthController::class, 'LogoutUser']);
-    
+
     // Route Tabungan
     Route::get('/tabungan', [TabunganController::class, 'index']);
     Route::post('/tabungan', [TabunganController::class, 'store']);
@@ -22,6 +22,4 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // Route Riwayat Tabungan
     Route::get('/riwayat-tabungan', [TransaksiTabunganController::class, 'index']);
     Route::post('/riwayat-tabungan', [TransaksiTabunganController::class, 'store']);
-    Route::put('/riwayat-tabungan/{id_riwayat}', [TransaksiTabunganController::class, 'update']);
-    Route::delete('/riwayat-tabungan/{id_riwayat}', [TransaksiTabunganController::class, 'destroy']);
 });
