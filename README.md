@@ -1,64 +1,117 @@
-# Savings App - Backend 
+# Savings App Backend
 
-Repository ini berisi backend untuk aplikasi **Savings App**, platform pencatat target tabungan. Dibangun menggunakan **Laravel 12**, API ini menyediakan layanan pengelolaan data pengguna, target tabungan, hingga riwayat transaksi tabungan secara real-time.
+Repository ini berisi **Backend** untuk aplikasi **Savings App**, sebuah platform pencatat dan pengelola target tabungan pengguna.
 
-> **Catatan:** Untuk repositori Frontend (React), silakan kunjungi: [https://github.com/Reynant28/savings-app-frontend]
+Backend dibangun menggunakan **Laravel 12** dan berfungsi sebagai penyedia layanan REST API untuk autentikasi, pengelolaan target tabungan, serta riwayat transaksi secara real-time.
+
+> **Frontend Repository (React):**  
+> https://github.com/Reynant28/savings-app-frontend
+
+---
 
 ## Fitur Utama
 
-- **Secure Authentication**: Menggunakan Laravel Sanctum untuk sistem Login & Register yang aman.
-- **Custom Goal Management**: CRUD target tabungan lengkap dengan upload foto target.
-- **Transaction Tracking**: Pencatatan riwayat setoran (deposit) yang terhubung ke setiap target tabungan.
-- **Progress Analytics**: Kalkulasi otomatis persentase progres tabungan dan sisa hari menuju target.
-- **File Storage**: Integrasi sistem penyimpanan lokal untuk gambar profil/target tabungan.
+- **Secure Authentication**  
+  Sistem login dan register menggunakan **Laravel Sanctum (token-based authentication)**.
 
-## Stack Teknologi
+- **Goal Management**  
+  CRUD target tabungan lengkap dengan **upload foto target**.
 
-- **Framework:** Laravel 12
-- **Database:** PostgreSql
-- **Auth:** Laravel Sanctum (Token-based)
-- **Image Handling:** Intervention Image / Laravel Storage
+- **Transaction Tracking**  
+  Pencatatan riwayat setoran (deposit) yang terhubung ke setiap target tabungan.
+
+- **Progress Analytics**  
+  Perhitungan otomatis:
+  - total tabungan
+  - persentase progres
+  - sisa hari menuju target
+
+- **File Storage**  
+  Penyimpanan gambar menggunakan **Laravel Storage**.
+
+---
+
+## Tech Stack
+
+- **Framework**: Laravel 12  
+- **Database**: PostgreSQL  
+- **Authentication**: Laravel Sanctum  
+- **File Handling**: Laravel Storage
+
+---
 
 ## Struktur Database
 
-Backend ini menggunakan struktur tabel relasional sebagai berikut:
-- `tb_users`: Menyimpan data kredensial pengguna.
-- `tb_tabungan`: Menyimpan data target tabungan (terikat ke `id_user`).
-- `tb_transaksi_tabungan`: Detail setiap setoran yang masuk ke tabungan tertentu.
+Backend ini menggunakan struktur tabel relasional:
 
+- `tb_users`  
+  Menyimpan data pengguna.
 
+- `tb_tabungan`  
+  Menyimpan data target tabungan (relasi ke `id_user`).
+
+- `tb_transaksi_tabungan`  
+  Menyimpan riwayat setoran (deposit) tiap tabungan.
+
+---
 
 ## Instalasi (Localhost)
 
-1. **Clone & Install:**
-   ```bash
-   git clone [https://github.com/Reynant28/savings-app-backend.git](https://github.com/UsernameAnda/savings-app-backend.git)
-   cd savings-app-backend
-   composer install
-2. **Environment Setup:**
+### 1️. Clone & Install Dependency
+```bash
+git clone https://github.com/Reynant28/savings-app-backend.git
+cd savings-app-backend
+composer install
+````
 
-- Duplikat .env.example menjadi .env.
-- Jalankan
-  ```
-  php artisan key:generate.
-- Konfigurasi koneksi database Anda di dalam .env.
-  ```
-  DB_CONNECTION=pgsql
-  DB_HOST=127.0.0.1
-  DB_PORT=5432
-  DB_DATABASE=db_savings
-  DB_USERNAME=[your_username]
-  DB_PASSWORD=[your_password]
-3. **Database Migration:** Lakukan migrasi database dan buka akses folder storage publik (Penting untuk gambar produk):
-   ```
-   php artisan migrate
-   php artisan storage:link
-4. **Jalankan Server**:
-    ```
-    php artisan serve
-maka server akan berjalan di: http://127.0.0.1:8000   
+### 2️. Konfigurasi Environment
 
-## **Video Demonstrasi**
-Berikut adalah link video penjelasan kode, struktur database, dan demonstrasi penggunaan aplikasi:
+* Duplikat file `.env.example` menjadi `.env`
+* Generate application key:
 
-https://drive.google.com/drive/folders/1wRhFe-tW-F0LWSCmZgILfMp3njed78pO?usp=sharing
+```bash
+php artisan key:generate
+```
+
+* Atur konfigurasi database di `.env`:
+
+```env
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=db_savings
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+```
+
+### 3. Migrasi Database & Storage
+
+```bash
+php artisan migrate
+php artisan storage:link
+```
+
+### 4️. Jalankan Server
+
+```bash
+php artisan serve
+```
+
+Server akan berjalan di:
+
+```
+http://127.0.0.1:8000
+```
+
+---
+
+## Video Demonstrasi
+
+Video berisi:
+
+* Penjelasan kode backend
+* Struktur database
+* Demonstrasi
+
+Link:
+[https://drive.google.com/drive/folders/1wRhFe-tW-F0LWSCmZgILfMp3njed78pO](https://drive.google.com/drive/folders/1wRhFe-tW-F0LWSCmZgILfMp3njed78pO)
