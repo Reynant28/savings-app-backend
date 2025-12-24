@@ -109,7 +109,7 @@ http://127.0.0.1:8000
 
 Video berisi:
 
-* Penjelasan kode backend
+* Penjelasan aplikasi
 * Struktur database
 * Demonstrasi
 
